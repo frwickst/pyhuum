@@ -1,24 +1,12 @@
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 from urllib.parse import urljoin
 
-import requests
-from requests import RequestException, Response
+import aiohttp
 
 from huum.schemas import HuumStatusReponse
 from huum.settings import settings
 
-
-class HuumSession(requests.Session):
-    def __init__(self, username: str, password: str) -> None:
-        super().__init__()
-        self.url_base = "https://api.huum.eu/action/home/"
-        self.auth = (username, password)
-
-    def request(
-        self, method: str, url: Any, *args: Any, **kwargs: Any
-    ) -> requests.Response:
-        url = urljoin(self.url_base, url)
-        return super().request(method, url, **kwargs)
+API_BASE = "https://api.huum.eu/action/home/"
 
 
 class Huum:
@@ -29,66 +17,72 @@ class Huum:
 
         # Setting auth variables explicitly
         huum = Huum(username="foo", password="bar)
+
+        # If you don't have an existing aiohttp session
+        # then run `open_session()` after initilizing
+        huum.open_session()
     """
 
     min_temp = 40
     max_temp = 110
 
+    session: aiohttp.ClientSession
+
     def __init__(
         self,
         username: Optional[str] = settings.huum_username,
         password: Optional[str] = settings.huum_password,
+        session: Optional[aiohttp.ClientSession] = None,
     ) -> None:
+        if session:
+            self.session = session
+
         if not username or not password:
             raise ValueError(
                 "No username or password provided either by the environment nor explicitly"
             )
-        self.api = HuumSession(username=username, password=password)
+        self.auth = aiohttp.BasicAuth(username, password)
 
-    def __handle_request_error(self, url: str, response: Response) -> None:
-        if response.status_code != 200:
-            raise RequestException(
-                f"Request to {url} failed with status code {response.status_code}. {response.text}"
+    async def handle_response(self, response: aiohttp.ClientResponse) -> Any:
+        if response.status != 200:
+            response_text = await response.text()
+            raise aiohttp.ClientError(
+                f"Request failed with status code {response.status}. {response_text}"
             )
+        return await response.json()
 
-    def __call_get(
-        self, url: str, query_params: Optional[Dict[str, Any]] = None
-    ) -> Any:
-        if not query_params:
-            query_params = {}
+    async def status(self) -> HuumStatusReponse:
+        url = urljoin(API_BASE, "status")
 
-        response = self.api.get(url, params=query_params)
-        self.__handle_request_error(url, response)
-        return response.json()
+        response = await self.session.get(url, auth=self.auth)
+        json_data = await self.handle_response(response)
 
-    def __call_post(self, url: str, data: Optional[Dict[str, Any]] = None) -> Any:
-        if not data:
-            data = {}
+        return HuumStatusReponse(**json_data)
 
-        response = self.api.post(url, json=data)
-        self.__handle_request_error(url, response)
-        return response.json()
-
-    def status(self) -> HuumStatusReponse:
-        url = "status"
-
-        json_response = self.__call_get(url)
-        return HuumStatusReponse(**json_response)
-
-    def turn_on(self, temperature: int) -> HuumStatusReponse:
+    async def turn_on(self, temperature: int) -> HuumStatusReponse:
         if temperature not in range(self.min_temp, self.max_temp):
             raise ValueError(
                 f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
             )
 
-        url = "start"
+        url = urljoin(API_BASE, "start")
         data = {"targetTemperature": temperature}
 
-        json_response = self.__call_post(url, data=data)
-        return HuumStatusReponse(**json_response)
+        response = await self.session.post(url, json=data, auth=self.auth)
+        json_data = await self.handle_response(response)
 
-    def turn_off(self) -> HuumStatusReponse:
-        url = "stop"
+        return HuumStatusReponse(**json_data)
 
-        json_response = self.__call_post(url)
-        return HuumStatusReponse(**json_response)
+    async def turn_off(self) -> HuumStatusReponse:
+        url = urljoin(API_BASE, "stop")
+
+        response = await self.session.post(url, auth=self.auth)
+        json_data = await self.handle_response(response)
+
+        return HuumStatusReponse(**json_data)
+
+    async def open_session(self) -> None:
+        self.session = aiohttp.ClientSession()
+
+    async def close_session(self) -> None:
+        await self.session.close()
