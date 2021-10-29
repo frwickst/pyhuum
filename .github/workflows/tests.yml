@@ -43,7 +43,7 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction --no-root -E aiohttp
       #----------------------------------------------
       # install your root project, if required
       #----------------------------------------------
@@ -52,21 +52,21 @@ jobs:
       #----------------------------------------------
       #              run style check
       #----------------------------------------------
-      - name: Run tests
+      - name: Run style tests
         run: |
           source .venv/bin/activate
           black --check . && flake8 && isort . -c
       #----------------------------------------------
       #              run type check
       #----------------------------------------------
-      - name: Run tests
+      - name: Run type tests
         run: |
           source .venv/bin/activate
           mypy . --strict
       #----------------------------------------------
       #              run tests
       #----------------------------------------------
-      - name: Run tests
+      - name: Run code tests
         run: |
           source .venv/bin/activate
           pytest --cov
