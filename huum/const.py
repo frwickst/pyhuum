@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import IntEnum
 
 
-class SaunaStatus(Enum):
+class SaunaStatus(IntEnum):
     OFFLINE = 230
     ONLINE_HEATING = 231
     ONLINE_NOT_HEATING = 232
