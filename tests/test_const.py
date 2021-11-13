@@ -1,4 +1,4 @@
-from huum.const import SaunaStatus, STATUS_CODE_TEXTS
+from huum.const import STATUS_CODE_TEXTS, SaunaStatus
 
 
 def test_code_texts():
