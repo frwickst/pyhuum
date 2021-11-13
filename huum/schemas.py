@@ -3,22 +3,6 @@ from typing import Optional
 
 from pydantic import BaseModel, Field
 
-status_code_texts = {
-    230: "offline",
-    231: "online and heating",
-    232: "online but not heating",
-    233: "being used by another user and is locked",
-    400: "emergency stop",
-}
-
-config_code_texts = {
-    1: "Configured to user light system",
-    2: "Configured to use steamer system",
-    3: "Configured to use both light and steamer systems",
-}
-
-steamer_code_texts = {1: "No water in steamer, steamer system not allowed to start"}
-
 
 class HuumStatus(BaseModel):
     code: int
