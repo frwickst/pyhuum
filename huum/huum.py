@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 import aiohttp
 
-from huum.schemas import HuumStatusReponse
+from huum.schemas import HuumStatusResponse
 from huum.settings import settings
 
 API_BASE = "https://api.huum.eu/action/home/"
@@ -51,15 +51,15 @@ class Huum:
             )
         return await response.json()
 
-    async def status(self) -> HuumStatusReponse:
+    async def status(self) -> HuumStatusResponse:
         url = urljoin(API_BASE, "status")
 
         response = await self.session.get(url, auth=self.auth)
         json_data = await self.handle_response(response)
 
-        return HuumStatusReponse(**json_data)
+        return HuumStatusResponse(**json_data)
 
-    async def turn_on(self, temperature: int) -> HuumStatusReponse:
+    async def turn_on(self, temperature: int) -> HuumStatusResponse:
         if temperature not in range(self.min_temp, self.max_temp):
             raise ValueError(
                 f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
@@ -71,15 +71,15 @@ class Huum:
         response = await self.session.post(url, json=data, auth=self.auth)
         json_data = await self.handle_response(response)
 
-        return HuumStatusReponse(**json_data)
+        return HuumStatusResponse(**json_data)
 
-    async def turn_off(self) -> HuumStatusReponse:
+    async def turn_off(self) -> HuumStatusResponse:
         url = urljoin(API_BASE, "stop")
 
         response = await self.session.post(url, auth=self.auth)
         json_data = await self.handle_response(response)
 
-        return HuumStatusReponse(**json_data)
+        return HuumStatusResponse(**json_data)
 
     async def open_session(self) -> None:
         self.session = aiohttp.ClientSession()

@@ -19,12 +19,12 @@ class HuumSteamerError(BaseModel):
     text: str
 
 
-class HuumStatusReponse(BaseModel):
+class HuumStatusResponse(BaseModel):
     status: int = Field(alias="statusCode")
     door_closed: bool = Field(alias="door")
-    temperature: str
+    temperature: int
     max_heating_time: int = Field(alias="maxHeatingTime")
-    target_temperature: Optional[str] = Field(alias="targetTemperature")
+    target_temperature: Optional[int] = Field(alias="targetTemperature")
     start_date: Optional[datetime] = Field(alias="startDate")
     end_date: Optional[datetime] = Field(alias="endDate")
     duration: Optional[int] = Field(alias="")
