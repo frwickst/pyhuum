@@ -72,20 +72,6 @@ class Huum:
         if not status.door_closed:
             raise SafetyException("Can not start sauna when door is open")
 
-    async def status(self) -> HuumStatusResponse:
-        """
-        Get the status of the Sauna
-
-        Returns:
-            A `HuumStatusResponse` from the Huum API
-        """
-        url = urljoin(API_BASE, "status")
-
-        response = await self.session.get(url, auth=self.auth)
-        json_data = await self.handle_response(response)
-
-        return HuumStatusResponse(**json_data)
-
     async def turn_on(
         self, temperature: int, safety_override: bool = False
     ) -> HuumStatusResponse:
@@ -115,6 +101,21 @@ class Huum:
 
         return HuumStatusResponse(**json_data)
 
+    async def turn_off(self) -> HuumStatusResponse:
+        """
+        Turns off the sauna
+
+        Returns:
+            A `HuumStatusResponse` from the Huum API
+
+        """
+        url = urljoin(API_BASE, "stop")
+
+        response = await self.session.post(url, auth=self.auth)
+        json_data = await self.handle_response(response)
+
+        return HuumStatusResponse(**json_data)
+
     async def set_temperature(
         self, temperature: int, safety_override: bool = False
     ) -> HuumStatusResponse:
@@ -134,17 +135,16 @@ class Huum:
         """
         return await self.turn_on(temperature, safety_override)
 
-    async def turn_off(self) -> HuumStatusResponse:
+    async def status(self) -> HuumStatusResponse:
         """
-        Turns off the sauna
+        Get the status of the Sauna
 
         Returns:
             A `HuumStatusResponse` from the Huum API
-
         """
-        url = urljoin(API_BASE, "stop")
+        url = urljoin(API_BASE, "status")
 
-        response = await self.session.post(url, auth=self.auth)
+        response = await self.session.get(url, auth=self.auth)
         json_data = await self.handle_response(response)
 
         return HuumStatusResponse(**json_data)
