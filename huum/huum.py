@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 
 import aiohttp
 
+from huum.exceptions import SafetyException
 from huum.schemas import HuumStatusResponse
 from huum.settings import settings
 
@@ -21,6 +22,9 @@ class Huum:
         # If you don't have an existing aiohttp session
         # then run `open_session()` after initilizing
         huum.open_session()
+
+        # Turn on the sauna
+        huum.turn_on(80)
     """
 
     min_temp = 40
@@ -44,6 +48,15 @@ class Huum:
         self.auth = aiohttp.BasicAuth(username, password)
 
     async def handle_response(self, response: aiohttp.ClientResponse) -> Any:
+        """
+        Handle a response and raise errors if status code is not 200
+
+        Args:
+            response: Response from the Huum API
+
+        Returns:
+            A response object
+        """
         if response.status != 200:
             response_text = await response.text()
             raise aiohttp.ClientError(
@@ -59,11 +72,26 @@ class Huum:
 
         return HuumStatusResponse(**json_data)
 
-    async def turn_on(self, temperature: int) -> HuumStatusResponse:
+    async def turn_on(
+        self, temperature: int, safety_override: bool = False
+    ) -> HuumStatusResponse:
+        """
+        Turns on the sauna at a given temperature
+
+        Args:
+            temperature: Target temperature to set the sauna to
+            safety_override: If False, check if door is close before turning on the sauna
+
+        Returns:
+            A `HuumStatusResponse` from the Huum API
+        """
         if temperature not in range(self.min_temp, self.max_temp):
             raise ValueError(
                 f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
             )
+
+        if not safety_override:
+            await self._check_door()
 
         url = urljoin(API_BASE, "start")
         data = {"targetTemperature": temperature}
@@ -93,6 +121,13 @@ class Huum:
         return await self.turn_on(temperature, safety_override)
 
     async def turn_off(self) -> HuumStatusResponse:
+        """
+        Turns off the sauna
+
+        Returns:
+            A `HuumStatusResponse` from the Huum API
+
+        """
         url = urljoin(API_BASE, "stop")
 
         response = await self.session.post(url, auth=self.auth)

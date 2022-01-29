@@ -1,0 +1,2 @@
+class SafetyException(Exception):
+    pass
