@@ -5,7 +5,7 @@ from unittest.mock import patch
 import pytest
 
 from huum.huum import Huum
-from huum.schemas import HuumStatusReponse
+from huum.schemas import HuumStatusResponse
 from tests.utils import MockResponse
 
 
@@ -19,7 +19,7 @@ async def test_status_idle(mock_request: Any) -> None:
         "paymentEndDate": None,
         "temperature": "21",
     }
-    expected_result = HuumStatusReponse(**idle_status_response)
+    expected_result = HuumStatusResponse(**idle_status_response)
     mock_request.return_value = MockResponse(idle_status_response, 200)
 
     huum = Huum("test", "test")
@@ -43,7 +43,7 @@ async def test_status_heating(mock_request: Any) -> None:
         "endDate": 1631633854,
         "duration": 179,
     }
-    expected_result = HuumStatusReponse(**heating_status_response)
+    expected_result = HuumStatusResponse(**heating_status_response)
     mock_request.return_value = MockResponse(heating_status_response, 200)
 
     huum = Huum("test", "test")
@@ -67,7 +67,7 @@ async def test_heating_stop(mock_request: Any) -> None:
         "endDate": 1631685790,
         "duration": 0,
     }
-    expected_result = HuumStatusReponse(**heating_stop_response)
+    expected_result = HuumStatusResponse(**heating_stop_response)
     mock_request.return_value = MockResponse(heating_stop_response, 200)
 
     huum = Huum("test", "test")
@@ -91,7 +91,7 @@ async def test_heating_start(mock_request: Any) -> None:
         "endDate": 1631696580,
         "duration": 180,
     }
-    expected_result = HuumStatusReponse(**heating_start_response)
+    expected_result = HuumStatusResponse(**heating_start_response)
     mock_request.return_value = MockResponse(heating_start_response, 200)
 
     huum = Huum("test", "test")
