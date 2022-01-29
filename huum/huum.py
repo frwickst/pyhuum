@@ -64,7 +64,21 @@ class Huum:
             )
         return await response.json()
 
+    async def _check_door(self) -> None:
+        """
+        Check if the door is closed, if not, raise an exception
+        """
+        status = await self.status()
+        if not status.door_closed:
+            raise SafetyException("Can not start sauna when door is open")
+
     async def status(self) -> HuumStatusResponse:
+        """
+        Get the status of the Sauna
+
+        Returns:
+            A `HuumStatusResponse` from the Huum API
+        """
         url = urljoin(API_BASE, "status")
 
         response = await self.session.get(url, auth=self.auth)
