@@ -73,6 +73,25 @@ class Huum:
 
         return HuumStatusResponse(**json_data)
 
+    async def set_temperature(
+        self, temperature: int, safety_override: bool = False
+    ) -> HuumStatusResponse:
+        """
+        Alias for turn_on as Huum does not expose an explicit "set_temperature" endpoint
+
+        Implementation choice: Yes, aliasing can be done by simply asigning
+        set_temperature = turn_on, however this will not create documentation,
+        makes the code harder to read and is generally seen as non-pythonic.
+
+        Args:
+            temperature: Target temperature to set the sauna to
+            safety_override: If False, check if door is close before turning on the sauna
+
+        Returns:
+            A `HuumStatusResponse` from the Huum API
+        """
+        return await self.turn_on(temperature, safety_override)
+
     async def turn_off(self) -> HuumStatusResponse:
         url = urljoin(API_BASE, "stop")
 
