@@ -18,7 +18,7 @@ class Huum:
         huum = Huum()
 
         # Setting auth variables explicitly
-        huum = Huum(username="foo", password="bar)
+        huum = Huum(username="foo", password="bar")
 
         # If you don't have an existing aiohttp session
         # then run `open_session()` after initilizing
