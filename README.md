@@ -1,12 +1,12 @@
-# huum - A python library for controlling Huum saunas
+# huum - A python library for controlling [Huum](https://huum.eu/) saunas
 
 This library was created primarily to be used together with Home Assistant, but
 can be used as a stand-alone library as well. The API used by this library is sanctioned
 by Huum to be used by third parties. At least to the extent that they happily provided
 documentation for the API when asked about it.
 
-This library has been tested against a (https://huum.eu/products/drop-electric-sauna-heater/)[Huum Drop] sauna
-using the (https://huum.eu/products/uku-wi-fi-sauna-controller/)[UKU Wi-Fi] control unit.
+This library has been tested against a [Huum Drop](https://huum.eu/products/drop-electric-sauna-heater/) sauna
+using the [UKU Wi-Fi](https://huum.eu/products/uku-wi-fi-sauna-controller/) control unit.
 
 No guarantees are given when using this library. You are using it at your own risk.
 Saunas can be dangerous if used without care or without the right security measures.
