@@ -103,16 +103,3 @@ async def test_set_temperature_turn_on(mock_request: Any) -> None:
     result_set_temperature = await huum.set_temperature(temperature=80)
 
     assert result_turn_on == result_set_temperature
-
-
-@pytest.mark.asyncio
-@patch("aiohttp.ClientSession._request")
-async def test_bad_response_code(mock_request: Any) -> None:
-    test_response_text = "__test string__"
-    mock_request.return_value = MockResponse({}, 400, test_response_text)
-
-    huum = Huum("test", "test")
-    await huum.open_session()
-    with pytest.raises(aiohttp.ClientError) as exception:
-        await huum.status()
-    assert test_response_text in str(exception.value)

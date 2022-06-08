@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Optional
 from urllib.parse import urljoin
 
 import aiohttp
@@ -48,23 +48,6 @@ class Huum:
             )
         self.auth = aiohttp.BasicAuth(username, password)
 
-    async def handle_response(self, response: aiohttp.ClientResponse) -> Any:
-        """
-        Handle a response and raise errors if status code is not 200
-
-        Args:
-            response: Response from the Huum API
-
-        Returns:
-            A response object
-        """
-        if response.status != 200:
-            response_text = await response.text()
-            raise aiohttp.ClientError(
-                f"Request failed with status code {response.status}. {response_text}"
-            )
-        return await response.json()
-
     async def _check_door(self) -> None:
         """
         Check if the door is closed, if not, raise an exception
@@ -97,8 +80,10 @@ class Huum:
         url = urljoin(API_BASE, "start")
         data = {"targetTemperature": temperature}
 
-        response = await self.session.post(url, json=data, auth=self.auth)
-        json_data = await self.handle_response(response)
+        response = await self.session.post(
+            url, json=data, auth=self.auth, raise_for_status=True
+        )
+        json_data = await response.json()
 
         return HuumStatusResponse(**json_data)
 
@@ -112,8 +97,8 @@ class Huum:
         """
         url = urljoin(API_BASE, "stop")
 
-        response = await self.session.post(url, auth=self.auth)
-        json_data = await self.handle_response(response)
+        response = await self.session.post(url, auth=self.auth, raise_for_status=True)
+        json_data = await response.json()
 
         return HuumStatusResponse(**json_data)
 
@@ -145,8 +130,8 @@ class Huum:
         """
         url = urljoin(API_BASE, "status")
 
-        response = await self.session.get(url, auth=self.auth)
-        json_data = await self.handle_response(response)
+        response = await self.session.get(url, auth=self.auth, raise_for_status=True)
+        json_data = await response.json()
 
         return HuumStatusResponse(**json_data)
 

@@ -158,3 +158,13 @@ huum.turn_off()
 
 This library uses Pydantic schemas for all method responses.
 I recommend checking the /huum/schemas.py for checking responses.
+
+## Handling exceptions
+
+All exceptions that are raised from making an HTTP request are coming directly from `aiohttp`.
+More of the time these will be `aiohtto.ClientResponseError` as all requests are done with `raise_for_status` set
+to `True` for requests that goes through `aiohttp`.
+
+If the door is open and the sauna is turned on, and the client is not told to explicitly bypass security
+measures (see "Security concerns" above), then `huum.exceptions.SafetyException` will be raised.
+
