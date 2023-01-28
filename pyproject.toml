@@ -13,14 +13,14 @@ aiohttp = { version = "^3.7.4", optional = true }
 aiohttp = ["aiohttp"]
 
 [tool.poetry.dev-dependencies]
-black = "^21.7b0"
-mypy = "^0.910"
-flake8 = "^3.9.2"
+black = "^23.1a1"
+mypy = "^0.991"
+flake8 = "^6.0.0"
 types-requests = "^2.25.6"
 isort = "^5.9.3"
-pytest = "^6.2.5"
-pytest-cov = "^2.12.1"
-pytest-asyncio = "^0.16.0"
+pytest = "^7.2.1"
+pytest-cov = "^4.0.0"
+pytest-asyncio = "^0.20.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
