@@ -12,6 +12,3 @@ class MockResponse:
 
     async def json(self) -> dict[str, Any]:
         return self._json
-
-    async def text(self) -> str:
-        return self._text
