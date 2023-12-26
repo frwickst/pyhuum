@@ -8,12 +8,12 @@ authors = ["Frank Wickström <frwickst@gmail.com>"]
 aiohttp = { version = "^3.9.1", optional = true }
 mashumaro = "^3.11"
 python = "^3.9"
+ruff = "^0.1.9"
 
 [tool.poetry.extras]
 aiohttp = ["aiohttp"]
 
 [tool.poetry.dev-dependencies]
-black = "^23.12.1"
 flake8 = "^6.1.0"
 isort = "^5.13.2"
 mypy = "^1.8.0"
@@ -37,3 +37,8 @@ source = ["huum", "tests"]
 [tool.coverage.report]
 show_missing = true
 fail_under = 100
+
+[tool.ruff]
+select = ["E4", "E7", "E9", "F", "T20", "B", "ERA", "PIE"]
+line-length = 104
+ignore = ["E203", "E501", "B007", "B026", "B904", "PIE808"]

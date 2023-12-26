@@ -55,7 +55,7 @@ jobs:
       - name: Run style tests
         run: |
           source .venv/bin/activate
-          black --check . && flake8 && isort . -c
+          ruff --check . && flake8 && isort . -c
       #----------------------------------------------
       #              run type check
       #----------------------------------------------
