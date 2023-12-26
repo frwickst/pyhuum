@@ -58,16 +58,6 @@ Supported Python versions:
 ### Authentication
 Authentication uses username + password. The same credentials that you use for logging into the Huum application.
 
-The credentials can be passed in one of two ways.
-
-**Using environment variables**
-
-Set the variables `HUUM_USERNAME` and `HUUM_PASSWORD` to their respective values and run.
-
-```python
-huum = Huum()
-```
-
 **Passing credentials to constructor**
 
 ```python

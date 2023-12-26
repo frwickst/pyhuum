@@ -6,7 +6,6 @@ import aiohttp
 from huum.const import SaunaStatus
 from huum.exceptions import SafetyException
 from huum.schemas import HuumStatusResponse
-from huum.settings import settings
 
 API_BASE = "https://api.huum.eu/action/home/"
 
@@ -35,17 +34,13 @@ class Huum:
 
     def __init__(
         self,
-        username: Optional[str] = settings.huum_username,
-        password: Optional[str] = settings.huum_password,
+        username: str,
+        password: str,
         session: Optional[aiohttp.ClientSession] = None,
     ) -> None:
         if session:
             self.session = session
 
-        if not username or not password:
-            raise ValueError(
-                "No username or password provided either by the environment nor explicitly"
-            )
         self.auth = aiohttp.BasicAuth(username, password)
 
     async def _check_door(self) -> None:
