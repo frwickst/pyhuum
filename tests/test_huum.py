@@ -29,7 +29,7 @@ async def test_closing_session() -> None:
 @pytest.mark.asyncio
 async def test_no_auth() -> None:
     with pytest.raises(TypeError):
-        Huum()
+        Huum()  # type: ignore
 
 
 @pytest.mark.asyncio
