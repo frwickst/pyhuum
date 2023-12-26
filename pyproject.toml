@@ -6,9 +6,8 @@ authors = ["Frank Wickström <frwickst@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-pydantic = "^2.5.3"
+mashumaro = "^3.11"
 aiohttp = { version = "^3.9.1", optional = true }
-pydantic-settings = "^2.1.0"
 
 [tool.poetry.extras]
 aiohttp = ["aiohttp"]

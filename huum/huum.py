@@ -80,7 +80,7 @@ class Huum:
         )
         json_data = await response.json()
 
-        return HuumStatusResponse(**json_data)
+        return HuumStatusResponse.from_dict(json_data)
 
     async def turn_off(self) -> HuumStatusResponse:
         """
@@ -95,7 +95,7 @@ class Huum:
         response = await self.session.post(url, auth=self.auth, raise_for_status=True)
         json_data = await response.json()
 
-        return HuumStatusResponse(**json_data)
+        return HuumStatusResponse.from_dict(json_data)
 
     async def set_temperature(
         self, temperature: int, safety_override: bool = False
@@ -128,7 +128,7 @@ class Huum:
         response = await self.session.get(url, auth=self.auth, raise_for_status=True)
         json_data = await response.json()
 
-        return HuumStatusResponse(**json_data)
+        return HuumStatusResponse.from_dict(json_data)
 
     async def status_from_status_or_stop(self) -> HuumStatusResponse:
         """
