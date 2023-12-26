@@ -26,7 +26,7 @@ async def test_status_idle(mock_request: Any) -> None:
     await huum.open_session()
     response = await huum.status()
 
-    TestCase().assertDictEqual(response.dict(), expected_result.dict())
+    TestCase().assertDictEqual(response.model_dump(), expected_result.model_dump())
 
 
 @pytest.mark.asyncio
@@ -50,7 +50,7 @@ async def test_status_heating(mock_request: Any) -> None:
     await huum.open_session()
     response = await huum.status()
 
-    TestCase().assertDictEqual(response.dict(), expected_result.dict())
+    TestCase().assertDictEqual(response.model_dump(), expected_result.model_dump())
 
 
 @pytest.mark.asyncio
@@ -74,7 +74,7 @@ async def test_heating_stop(mock_request: Any) -> None:
     await huum.open_session()
     response = await huum.turn_off()
 
-    TestCase().assertDictEqual(response.dict(), expected_result.dict())
+    TestCase().assertDictEqual(response.model_dump(), expected_result.model_dump())
 
 
 @pytest.mark.asyncio
@@ -98,4 +98,4 @@ async def test_heating_start(mock_request: Any) -> None:
     await huum.open_session()
     response = await huum.turn_on(75)
 
-    TestCase().assertDictEqual(response.dict(), expected_result.dict())
+    TestCase().assertDictEqual(response.model_dump(), expected_result.model_dump())
