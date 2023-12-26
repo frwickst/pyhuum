@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, Annotated
+from typing import Annotated, Optional
 
 from mashumaro import DataClassDictMixin, field_options
 
