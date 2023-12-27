@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Any, Optional
 from urllib.parse import urljoin
 
 import aiohttp
+from aiohttp import ClientResponse
 
 from huum.const import SaunaStatus
-from huum.exceptions import SafetyException
+from huum.exceptions import BadRequest, NotAuthenticated, RequestError, SafetyException
 from huum.schemas import HuumStatusResponse
 
 API_BASE = "https://api.huum.eu/action/"
@@ -52,6 +53,34 @@ class Huum:
         if not status.door_closed:
             raise SafetyException("Can not start sauna when door is open")
 
+    async def _make_call(
+        self, method: str, url: str, json: Any | None = None
+    ) -> ClientResponse:
+        call_args = {
+            "url": url,
+            "auth": self.auth,
+        }
+        if json:
+            call_args["json"] = json
+
+        call_request = getattr(self.session, method.lower())
+
+        response: ClientResponse = await call_request(**call_args)
+
+        if 401 < response.status:
+            try:
+                response.raise_for_status()
+            except Exception as err:
+                raise RequestError() from err
+
+        match response.status:
+            case 400:
+                raise BadRequest("Bad request")
+            case 401:
+                raise NotAuthenticated("Not authenticated")
+
+        return response
+
     async def turn_on(
         self, temperature: int, safety_override: bool = False
     ) -> HuumStatusResponse:
@@ -81,6 +110,9 @@ class Huum:
         )
         json_data = await response.json()
 
+        response = await self._make_call("post", url, json=data)
+        json_data = await response.json()
+
         return HuumStatusResponse.from_dict(json_data)
 
     async def turn_off(self) -> HuumStatusResponse:
@@ -93,7 +125,7 @@ class Huum:
         """
         url = urljoin(API_HOME_BASE, "stop")
 
-        response = await self.session.post(url, auth=self.auth, raise_for_status=True)
+        response = await self._make_call("post", url)
         json_data = await response.json()
 
         return HuumStatusResponse.from_dict(json_data)
@@ -126,7 +158,7 @@ class Huum:
         """
         url = urljoin(API_HOME_BASE, "status")
 
-        response = await self.session.get(url, auth=self.auth, raise_for_status=True)
+        response = await self._make_call("get", url)
         json_data = await response.json()
 
         return HuumStatusResponse.from_dict(json_data)
