@@ -14,5 +14,9 @@ class NotAuthenticated(HuumError):
     pass
 
 
+class Forbidden(HuumError):
+    pass
+
+
 class RequestError(HuumError):
     pass

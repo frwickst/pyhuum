@@ -5,7 +5,13 @@ import aiohttp
 from aiohttp import ClientResponse
 
 from huum.const import SaunaStatus
-from huum.exceptions import BadRequest, NotAuthenticated, RequestError, SafetyException
+from huum.exceptions import (
+    BadRequest,
+    Forbidden,
+    NotAuthenticated,
+    RequestError,
+    SafetyException,
+)
 from huum.schemas import HuumStatusResponse
 
 API_BASE = "https://api.huum.eu/action/"
@@ -75,6 +81,8 @@ class Huum:
                     raise BadRequest("Bad request") from err
                 case 401:
                     raise NotAuthenticated("Not authenticated") from err
+                case 403:
+                    raise Forbidden("Forbidden") from err
             raise RequestError() from err
 
         return response
