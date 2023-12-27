@@ -1,5 +1,7 @@
 from typing import Any
 
+from aiohttp import ClientResponseError
+
 
 class MockResponse:
     def __init__(
@@ -12,3 +14,13 @@ class MockResponse:
 
     async def json(self) -> dict[str, Any]:
         return self._json
+
+    def raise_for_status(self):
+        if self.status >= 400:
+            raise ClientResponseError(
+                None,
+                None,
+                status=self.status,
+                message="Bad Request",
+                headers=None,
+            )

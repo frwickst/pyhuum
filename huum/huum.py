@@ -67,17 +67,15 @@ class Huum:
 
         response: ClientResponse = await call_request(**call_args)
 
-        if 401 < response.status:
-            try:
-                response.raise_for_status()
-            except Exception as err:
-                raise RequestError() from err
-
-        match response.status:
-            case 400:
-                raise BadRequest("Bad request")
-            case 401:
-                raise NotAuthenticated("Not authenticated")
+        try:
+            response.raise_for_status()
+        except Exception as err:
+            match response.status:
+                case 400:
+                    raise BadRequest("Bad request") from err
+                case 401:
+                    raise NotAuthenticated("Not authenticated") from err
+            raise RequestError() from err
 
         return response
 
@@ -104,11 +102,6 @@ class Huum:
 
         url = urljoin(API_HOME_BASE, "start")
         data = {"targetTemperature": temperature}
-
-        response = await self.session.post(
-            url, json=data, auth=self.auth, raise_for_status=True
-        )
-        json_data = await response.json()
 
         response = await self._make_call("post", url, json=data)
         json_data = await response.json()
