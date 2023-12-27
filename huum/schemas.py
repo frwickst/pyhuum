@@ -1,8 +1,7 @@
-from dataclasses import dataclass, field
-from datetime import datetime
-from typing import Annotated, Optional
+from dataclasses import dataclass
 
-from mashumaro import DataClassDictMixin, field_options
+from mashumaro import DataClassDictMixin
+from mashumaro.config import BaseConfig
 
 
 @dataclass
@@ -25,24 +24,26 @@ class HuumSteamerError(DataClassDictMixin):
 
 @dataclass
 class HuumStatusResponse(DataClassDictMixin):
-    status: int = field(metadata=field_options(alias="statusCode"))
-    door_closed: bool = field(metadata=field_options(alias="door"))
+    status: int
+    door_closed: bool
     temperature: int
-    max_heating_time: int = field(metadata=field_options(alias="maxHeatingTime"))
-    target_temperature: Optional[
-        Annotated[int, field(metadata=field_options(alias="targetTemperature"))]
-    ] = None
-    start_date: Optional[
-        Annotated[datetime, field(metadata=field_options(alias="startDate"))]
-    ] = None
-    end_date: Optional[
-        Annotated[datetime, field(metadata=field_options(alias="endDate"))]
-    ] = None
-    duration: Optional[int] = None
-    config: Optional[int] = None
-    streamer_error: Annotated[
-        Optional[int], field(metadata=field_options(alias="streamerError"))
-    ] = None
-    payment_end_date: Optional[
-        Annotated[datetime, field(metadata=field_options(alias="paymentEndDate"))]
-    ] = None
+    max_heating_time: int
+    target_temperature: int | None = None
+    start_date: int | None = None
+    end_date: int | None = None
+    duration: int | None = None
+    config: int | None = None
+    steamer_error: int | None = None
+    payment_end_date: int | None = None
+
+    class Config(BaseConfig):
+        aliases = {
+            "status": "statusCode",
+            "door_closed": "door",
+            "max_heating_time": "maxHeatingTime",
+            "target_temperature": "targetTemperature",
+            "start_date": "startDate",
+            "end_date": "endDate",
+            "steamer_error": "steamerError",
+            "payment_end_date": "paymentEndDate",
+        }
