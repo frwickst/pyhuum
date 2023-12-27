@@ -7,7 +7,8 @@ from huum.const import SaunaStatus
 from huum.exceptions import SafetyException
 from huum.schemas import HuumStatusResponse
 
-API_BASE = "https://api.huum.eu/action/home/"
+API_BASE = "https://api.huum.eu/action/"
+API_HOME_BASE = f"{API_BASE}/home/"
 
 
 class Huum:
@@ -72,7 +73,7 @@ class Huum:
         if not safety_override:
             await self._check_door()
 
-        url = urljoin(API_BASE, "start")
+        url = urljoin(API_HOME_BASE, "start")
         data = {"targetTemperature": temperature}
 
         response = await self.session.post(
@@ -90,7 +91,7 @@ class Huum:
             A `HuumStatusResponse` from the Huum API
 
         """
-        url = urljoin(API_BASE, "stop")
+        url = urljoin(API_HOME_BASE, "stop")
 
         response = await self.session.post(url, auth=self.auth, raise_for_status=True)
         json_data = await response.json()
@@ -123,7 +124,7 @@ class Huum:
         Returns:
             A `HuumStatusResponse` from the Huum API
         """
-        url = urljoin(API_BASE, "status")
+        url = urljoin(API_HOME_BASE, "status")
 
         response = await self.session.get(url, auth=self.auth, raise_for_status=True)
         json_data = await response.json()
