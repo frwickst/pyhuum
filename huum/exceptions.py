@@ -1,14 +1,18 @@
-class SafetyException(Exception):
+class HuumError(Exception):
     pass
 
 
-class BadRequest(Exception):
+class SafetyException(HuumError):
     pass
 
 
-class NotAuthenticated(Exception):
+class BadRequest(HuumError):
     pass
 
 
-class RequestError(Exception):
+class NotAuthenticated(HuumError):
+    pass
+
+
+class RequestError(HuumError):
     pass
