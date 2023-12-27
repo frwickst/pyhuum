@@ -15,11 +15,11 @@ class MockResponse:
     async def json(self) -> dict[str, Any]:
         return self._json
 
-    def raise_for_status(self):
+    def raise_for_status(self) -> None:
         if self.status >= 400:
             raise ClientResponseError(
-                None,
-                None,
+                None,  # type: ignore
+                None,  # type: ignore
                 status=self.status,
                 message="Bad Request",
                 headers=None,
