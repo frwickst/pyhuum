@@ -152,9 +152,17 @@ I recommend checking the /huum/schemas.py for checking responses.
 
 ## Handling exceptions
 
-All exceptions that are raised from making an HTTP request are coming directly from `aiohttp`.
-More of the time these will be `aiohtto.ClientResponseError` as all requests are done with `raise_for_status` set
-to `True` for requests that goes through `aiohttp`.
+This library implements custom exceptions for most of its calls. You can find them in the exceptions.py
+file. But in short these are the exceptions triggered:
+
+| HTTP Status        | Exception          |
+|--------------------|--------------------|
+| 400                | `BadRequest`       |
+| 401                | `NotAuthenticated` |
+| 403                | `Forbidden`        |
+| Any other over 400 | `RequestError`     |
+
+All of exceptions triggered by the library inherit from `HuumError`.
 
 If the door is open and the sauna is turned on, and the client is not told to explicitly bypass security
 measures (see "Security concerns" above), then `huum.exceptions.SafetyException` will be raised.
