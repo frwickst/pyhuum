@@ -4,6 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
+from huum.exceptions import BadRequest, Forbidden, NotAuthenticated, RequestError
 from huum.huum import Huum
 from huum.schemas import HuumStatusResponse
 from tests.utils import MockResponse
@@ -99,3 +100,40 @@ async def test_heating_start(mock_request: Any) -> None:
     response = await huum.turn_on(75)
 
     TestCase().assertDictEqual(response.to_dict(), expected_result.to_dict())
+
+
+@pytest.mark.parametrize(
+    (
+        "status_code",
+        "exception",
+    ),
+    [
+        (
+            400,
+            BadRequest,
+        ),
+        (
+            401,
+            NotAuthenticated,
+        ),
+        (
+            403,
+            Forbidden,
+        ),
+        (
+            500,
+            RequestError,
+        ),
+    ],
+)
+@pytest.mark.asyncio
+@patch("aiohttp.ClientSession._request")
+async def test_error_codes(
+    mock_request: Any, status_code: int, exception: type[Exception]
+) -> None:
+    mock_request.return_value = MockResponse({}, status_code)
+
+    huum = Huum("test", "test")
+    await huum.open_session()
+    with pytest.raises(exception):
+        await huum.status()
