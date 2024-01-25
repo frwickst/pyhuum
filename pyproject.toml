@@ -8,7 +8,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 aiohttp = { version = "^3.9.1", optional = true }
-black = "^23.12.1"
 mashumaro = "^3.11"
 python = "^3.9"
 
@@ -16,6 +15,7 @@ python = "^3.9"
 aiohttp = ["aiohttp"]
 
 [tool.poetry.dev-dependencies]
+black = "^23.12.1"
 flake8 = "^6.1.0"
 ruff = "^0.1.9"
 isort = "^5.13.2"
