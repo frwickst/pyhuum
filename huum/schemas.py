@@ -34,7 +34,7 @@ class HuumStatusResponse(DataClassDictMixin):
     duration: int | None = None
     config: int | None = None
     steamer_error: int | None = None
-    payment_end_date: int | None = None
+    payment_end_date: str | None = None
 
     class Config(BaseConfig):
         aliases = {
