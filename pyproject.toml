@@ -8,9 +8,9 @@ readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-aiohttp = { version = "^3.9.5", optional = true }
+python = ">3.9,<3.13"
+aiohttp = {extras = ["speedups"], version = "^3.9.5"}
 mashumaro = "^3.13.1"
-python = "^3.11"
 
 [tool.poetry.extras]
 aiohttp = ["aiohttp"]
