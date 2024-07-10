@@ -128,9 +128,7 @@ async def test_heating_start(mock_request: Any) -> None:
 )
 @pytest.mark.asyncio
 @patch("aiohttp.ClientSession._request")
-async def test_error_codes(
-    mock_request: Any, status_code: int, exception: type[Exception]
-) -> None:
+async def test_error_codes(mock_request: Any, status_code: int, exception: type[Exception]) -> None:
     mock_request.return_value = MockResponse({}, status_code)
 
     huum = Huum("test", "test")

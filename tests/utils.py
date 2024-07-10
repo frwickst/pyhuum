@@ -4,9 +4,7 @@ from aiohttp import ClientResponseError
 
 
 class MockResponse:
-    def __init__(
-        self, json_data: dict[str, Any], status_code: int, text: str = ""
-    ) -> None:
+    def __init__(self, json_data: dict[str, Any], status_code: int, text: str = "") -> None:
         self._json = json_data
         self._text = text
 

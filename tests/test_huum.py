@@ -35,9 +35,7 @@ async def test_no_auth() -> None:
 @pytest.mark.asyncio
 @patch("huum.huum.Huum.status")
 @patch("huum.huum.Huum.turn_off")
-async def test_status_from_status_or_stop(
-    mock_huum_turn_off: Any, mock_huum_status: Any
-) -> None:
+async def test_status_from_status_or_stop(mock_huum_turn_off: Any, mock_huum_status: Any) -> None:
     mock_huum_status.return_value = HuumStatusResponse.from_dict(
         {
             "statusCode": SaunaStatus.ONLINE_NOT_HEATING,

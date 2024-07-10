@@ -24,6 +24,4 @@ CONFIG_CODE_TEXTS: Dict[int, str] = {
     3: "Configured to use both light and steamer systems",
 }
 
-STEAMER_CODE_TEXTS: Dict[int, str] = {
-    1: "No water in steamer, steamer system not allowed to start"
-}
+STEAMER_CODE_TEXTS: Dict[int, str] = {1: "No water in steamer, steamer system not allowed to start"}

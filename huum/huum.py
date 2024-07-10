@@ -59,9 +59,7 @@ class Huum:
         if not status.door_closed:
             raise SafetyException("Can not start sauna when door is open")
 
-    async def _make_call(
-        self, method: str, url: str, json: Any | None = None
-    ) -> ClientResponse:
+    async def _make_call(self, method: str, url: str, json: Any | None = None) -> ClientResponse:
         call_args = {
             "url": url,
             "auth": self.auth,
@@ -87,9 +85,7 @@ class Huum:
 
         return response
 
-    async def turn_on(
-        self, temperature: int, safety_override: bool = False
-    ) -> HuumStatusResponse:
+    async def turn_on(self, temperature: int, safety_override: bool = False) -> HuumStatusResponse:
         """
         Turns on the sauna at a given temperature
 

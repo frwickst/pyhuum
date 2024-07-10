@@ -8,23 +8,19 @@ readme = "README.md"
 license = "MIT"
 
 [tool.poetry.dependencies]
-aiohttp = { version = "^3.9.1", optional = true }
-mashumaro = "^3.11"
-python = "^3.9"
+aiohttp = { version = "^3.9.5", optional = true }
+mashumaro = "^3.13.1"
+python = "^3.11"
 
 [tool.poetry.extras]
 aiohttp = ["aiohttp"]
 
 [tool.poetry.dev-dependencies]
-black = "^23.12.1"
-flake8 = "^6.1.0"
-ruff = "^0.1.9"
-isort = "^5.13.2"
-mypy = "^1.8.0"
-pytest = "^7.4.3"
-pytest-asyncio = "^0.23.2"
-pytest-cov = "^4.1.0"
-types-requests = "^2.31.0.10"
+ruff = "^0.5.1"
+mypy = "^1.10.1"
+pytest = "^8.2.2"
+pytest-asyncio = "^0.23.7"
+pytest-cov = "^5.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -43,6 +39,6 @@ show_missing = true
 fail_under = 100
 
 [tool.ruff]
-select = ["E4", "E7", "E9", "F", "T20", "B", "ERA", "PIE"]
 line-length = 104
-ignore = ["E203", "E501", "B007", "B026", "B904", "PIE808"]
+lint.select = ["E4", "E7", "E9", "F", "G", "T20", "TRY004", "TRY302", "TRY400", "B", "ERA", "PIE", "I"]
+lint.ignore = ["E203", "E501", "B007", "B026", "B904", "PIE808"]
