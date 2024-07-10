@@ -5,6 +5,7 @@ description = "Python library for Huum saunas"
 authors = ["Frank Wickström <frwickst@gmail.com>"]
 repository = "https://github.com/frwickst/pyhuum"
 readme = "README.md"
+license = "MIT"
 
 [tool.poetry.dependencies]
 aiohttp = { version = "^3.9.1", optional = true }
