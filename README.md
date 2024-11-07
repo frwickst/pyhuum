@@ -21,23 +21,21 @@ Saunas can be dangerous if used without care or without the right security measu
 
 ## Quick guide
 ```python
-from huum import Huum
+import asyncio
 
-# Usage with env vars
-huum = Huum()
+from huum.huum import Huum
 
-# Setting auth variables explicitly
-huum = Huum(username="foo", password="bar")
+async def turn_on_sauna():    
+    huum = Huum(username="foo", password="bar")
+    
+    # If you don't have an existing aiohttp session
+    # then run `open_session()` after initilizing
+    await huum.open_session()
+    
+    # Turn on the sauna
+    await huum.turn_on(80)
 
-# If you don't have an existing aiohttp session
-# then run `open_session()` after initilizing
-huum.open_session()
-
-# Turn on the sauna
-huum.turn_on(80)
-
-# Turn off the sauna
-huum.turn_off(80)
+asyncio.run(turn_on_the_sauna())
 ```
 
 ## Usage
