@@ -14,6 +14,12 @@ from huum.exceptions import (
 )
 from huum.schemas import HuumStatusResponse
 
+
+def fahrenheit_to_celsius(temperature_f: float | int) -> float:
+    """Converts a temperature from Fahrenheit to Celsius."""
+    return (temperature_f - 32) * 5 / 9
+
+
 API_BASE = "https://api.huum.eu/action/"
 API_HOME_BASE = f"{API_BASE}/home/"
 
@@ -85,17 +91,31 @@ class Huum:
 
         return response
 
-    async def turn_on(self, temperature: int, safety_override: bool = False) -> HuumStatusResponse:
+    async def turn_on(self, temperature: int, safety_override: bool = False, is_fahrenheit: bool = False) -> HuumStatusResponse:
         """
-        Turns on the sauna at a given temperature
+        Turns on the sauna to a specified target temperature.
+
+        All internal logic and API communication use Celsius.
+        If `is_fahrenheit` is True, the provided `temperature` (as an integer)
+        will be converted from Fahrenheit to Celsius. The result of this
+        conversion is then cast to an integer (truncating any decimal part),
+        and this integer Celsius value is used for validation and API communication.
 
         Args:
-            temperature: Target temperature to set the sauna to
-            safety_override: If False, check if door is close before turning on the sauna
+            temperature: Target temperature (integer) to set the sauna to.
+                         Assumed to be Celsius unless `is_fahrenheit` is True.
+            safety_override: If False (default), checks if the sauna door is closed
+                             before attempting to turn on the sauna.
+            is_fahrenheit: If True, the input `temperature` is treated as Fahrenheit.
+                           Defaults to False (input temperature is Celsius).
 
         Returns:
-            A `HuumStatusResponse` from the Huum API
+            A `HuumStatusResponse` from the Huum API, reflecting the sauna's state
+            after the command.
         """
+        if is_fahrenheit:
+            temperature = int(fahrenheit_to_celsius(temperature))
+
         if temperature not in range(self.min_temp, self.max_temp):
             raise ValueError(
                 f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
@@ -128,7 +148,7 @@ class Huum:
         return HuumStatusResponse.from_dict(json_data)
 
     async def set_temperature(
-        self, temperature: int, safety_override: bool = False
+        self, temperature: int, safety_override: bool = False, is_fahrenheit: bool = False
     ) -> HuumStatusResponse:
         """
         Alias for turn_on as Huum does not expose an explicit "set_temperature" endpoint
@@ -137,14 +157,28 @@ class Huum:
         set_temperature = turn_on, however this will not create documentation,
         makes the code harder to read and is generally seen as non-pythonic.
 
+        All internal logic and API communication use Celsius.
+        If `is_fahrenheit` is True, the provided `temperature` (as an integer)
+        will be converted from Fahrenheit to Celsius. The result of this
+        conversion is then cast to an integer (truncating any decimal part),
+        and this integer Celsius value is used for validation and API communication
+        via the `turn_on` method.
+
         Args:
-            temperature: Target temperature to set the sauna to
-            safety_override: If False, check if door is close before turning on the sauna
+            temperature: Target temperature (integer) to set the sauna to.
+                         Assumed to be Celsius unless `is_fahrenheit` is True.
+            safety_override: If False (default), checks if the sauna door is closed
+                             before attempting to set the temperature (via `turn_on`).
+            is_fahrenheit: If True, the input `temperature` is treated as Fahrenheit.
+                           Defaults to False (input temperature is Celsius).
 
         Returns:
-            A `HuumStatusResponse` from the Huum API
+            A `HuumStatusResponse` from the Huum API, reflecting the sauna's state
+            after the command.
         """
-        return await self.turn_on(temperature, safety_override)
+        # The actual conversion logic is handled within turn_on,
+        # so we just need to pass the is_fahrenheit flag.
+        return await self.turn_on(temperature, safety_override, is_fahrenheit=is_fahrenheit)
 
     async def status(self) -> HuumStatusResponse:
         """
