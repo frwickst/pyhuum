@@ -7,7 +7,6 @@ import pytest
 from huum.const import SaunaStatus
 from huum.exceptions import SafetyException
 from huum.huum import Huum
-from huum.schemas import HuumStatusResponse
 from tests.utils import MockResponse
 
 
@@ -30,34 +29,6 @@ async def test_closing_session() -> None:
 async def test_no_auth() -> None:
     with pytest.raises(TypeError):
         Huum()  # type: ignore
-
-
-@pytest.mark.asyncio
-@patch("huum.huum.Huum.status")
-@patch("huum.huum.Huum.turn_off")
-async def test_status_from_status_or_stop(mock_huum_turn_off: Any, mock_huum_status: Any) -> None:
-    mock_huum_status.return_value = HuumStatusResponse.from_dict(
-        {
-            "statusCode": SaunaStatus.ONLINE_NOT_HEATING,
-            "door": True,
-            "temperature": 80,
-            "maxHeatingTime": 1337,
-        }
-    )
-    mock_huum_turn_off.return_value = HuumStatusResponse.from_dict(
-        {
-            "statusCode": SaunaStatus.ONLINE_NOT_HEATING,
-            "door": True,
-            "temperature": 90,
-            "maxHeatingTime": 1337,
-        }
-    )
-    huum = Huum("test", "test")
-    await huum.open_session()
-
-    status = await huum.status_from_status_or_stop()
-
-    assert status.temperature == 90
 
 
 @pytest.mark.asyncio

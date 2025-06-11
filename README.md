@@ -92,23 +92,10 @@ huum.close_session()
 
 #### Getting sauna status
 
-The Huum API exposes a status endpoint for getting the current status of the sauna. This will
-return the basic information about the sauna. It will however not return all of the info that
-the sauna _could_ give you _when the sauna is not heating_. You will however get this info
-if you try turning off the sauna again after it is already off. For that reason, this library
-exposes two methods of getting the status of the sauna, `status()` and `status_from_status_or_stop()`.
-The latter will first call the status endpoint, and if the sauna is off, then call the off endpoint
-to get the full status response.
-
-The main difference, and the main reason to use the latter endpoint, is that `status()` will not
-give you the previously set temperature of the sauna is off, while `status_from_status_or_stop()` will.
+The Huum API exposes a status endpoint for getting the current status of the sauna.
 
 ```python
 huum.status()
-```
-
-```python
-huum.status_from_status_or_stop()
 ```
 
 #### Turning on and setting temperature
