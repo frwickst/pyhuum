@@ -14,24 +14,27 @@ Saunas can be dangerous if used without care or without the right security measu
 ## Installation
 
 ### PIP
+
 `pip install huum`
 
 ### Poetry
+
 `poetry add huum`
 
 ## Quick guide
+
 ```python
 import asyncio
 
 from huum.huum import Huum
 
-async def turn_on_sauna():    
+async def turn_on_sauna():
     huum = Huum(username="foo", password="bar")
-    
+
     # If you don't have an existing aiohttp session
     # then run `open_session()` after initilizing
     await huum.open_session()
-    
+
     # Turn on the sauna
     await huum.turn_on(80)
 
@@ -45,16 +48,16 @@ The `huum` package is fully asynchronous.
 Supported Python versions:
 
 | Python | Supported |
-|--------|-----------|
-| <= 3.8 | ❌         |
+| ------ | --------- |
+| <= 3.8 | ❌        |
 | 3.9    | 🤷        |
 | 3.10   | 🤷        |
-| 3.11   | ✅         |
-| 3.12   | ✅         |
-| 3.13   | ✅         |
-
+| 3.11   | ✅        |
+| 3.12   | ✅        |
+| 3.13   | ✅        |
 
 ### Authentication
+
 Authentication uses username + password. The same credentials that you use for logging into the Huum application.
 
 **Passing credentials to constructor**
@@ -64,6 +67,7 @@ huum = Huum(username=<username>, password=<password>)
 ```
 
 ### Sessions
+
 You can use the library either with an already existing session or create one yourself. This design decision
 was created mainly to support Home Assistants (HA) existing sessions and complying with their guidelines. In
 most cases you will want to create your own session if you are using this outside of HA.
@@ -138,6 +142,7 @@ huum.set_temperature(temperature=80, safety_override=True)
 ```
 
 #### Turning off the sauna
+
 The sauna can be turned off by calling `turn_off()`.
 
 ```python
@@ -155,7 +160,7 @@ This library implements custom exceptions for most of its calls. You can find th
 file. But in short these are the exceptions triggered:
 
 | HTTP Status        | Exception          |
-|--------------------|--------------------|
+| ------------------ | ------------------ |
 | 400                | `BadRequest`       |
 | 401                | `NotAuthenticated` |
 | 403                | `Forbidden`        |
@@ -165,4 +170,3 @@ All of exceptions triggered by the library inherit from `HuumError`.
 
 If the door is open and the sauna is turned on, and the client is not told to explicitly bypass security
 measures (see "Security concerns" above), then `huum.exceptions.SafetyException` will be raised.
-
