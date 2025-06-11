@@ -106,6 +106,32 @@ async def test_heating_start(mock_request: Any) -> None:
     TestCase().assertDictEqual(response.to_dict(), expected_result.to_dict())
 
 
+@pytest.mark.asyncio
+@patch("aiohttp.ClientSession._request")
+async def test_toggle_light(mock_request: Any) -> None:
+    toggle_light_response = {
+        "maxHeatingTime": "3",
+        "statusCode": 231,
+        "door": True,
+        "paymentEndDate": None,
+        "temperature": "22",
+        "targetTemperature": "75",
+        "startDate": 1631685780,
+        "endDate": 1631696580,
+        "duration": 180,
+        "saunaName": "test",
+        "light": 1,
+    }
+    expected_result = HuumStatusResponse.from_dict(toggle_light_response)
+    mock_request.return_value = MockResponse(toggle_light_response, 200)
+
+    huum = Huum("test", "test")
+    await huum.open_session()
+    response = await huum.toggle_light()
+
+    TestCase().assertDictEqual(response.to_dict(), expected_result.to_dict())
+
+
 @pytest.mark.parametrize(
     (
         "status_code",

@@ -159,6 +159,20 @@ class Huum:
 
         return HuumStatusResponse.from_dict(json_data)
 
+    async def toggle_light(self) -> HuumStatusResponse:
+        """
+        Toggles the light/fan on a Sauna
+
+        Returns:
+            A `HuumStatusResponse` from the Huum API
+        """
+        url = urljoin(API_HOME_BASE, "light")
+
+        response = await self._make_call("get", url)
+        json_data = await response.json()
+
+        return HuumStatusResponse.from_dict(json_data)
+
     async def open_session(self) -> None:
         self.session = aiohttp.ClientSession()
 
