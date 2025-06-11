@@ -28,7 +28,7 @@ class Huum:
         huum = Huum(username="foo", password="bar")
 
         # If you don't have an existing aiohttp session
-        # then run `open_session()` after initilizing
+        # then run `open_session()` after initializing
         huum.open_session()
 
         # Turn on the sauna
@@ -133,7 +133,7 @@ class Huum:
         """
         Alias for turn_on as Huum does not expose an explicit "set_temperature" endpoint
 
-        Implementation choice: Yes, aliasing can be done by simply asigning
+        Implementation choice: Yes, aliasing can be done by simply assigning
         set_temperature = turn_on, however this will not create documentation,
         makes the code harder to read and is generally seen as non-pythonic.
 
