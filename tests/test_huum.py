@@ -68,6 +68,7 @@ async def test_door_open_on_check(mock_request: Any) -> None:
         "door": False,
         "temperature": 80,
         "maxHeatingTime": 180,
+        "saunaName": "test",
     }
     mock_request.return_value = MockResponse(response, 200)
 
@@ -96,6 +97,7 @@ async def test_set_temperature_turn_on(mock_request: Any) -> None:
         "door": True,
         "temperature": 80,
         "maxHeatingTime": 180,
+        "saunaName": "test",
     }
     mock_request.return_value = MockResponse(response, 200)
 

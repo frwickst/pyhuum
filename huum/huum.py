@@ -14,7 +14,7 @@ from huum.exceptions import (
 )
 from huum.schemas import HuumStatusResponse
 
-API_BASE = "https://api.huum.eu/action/"
+API_BASE = "https://sauna.huum.eu/action/"
 API_HOME_BASE = f"{API_BASE}/home/"
 
 

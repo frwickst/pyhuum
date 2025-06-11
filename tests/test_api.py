@@ -19,6 +19,7 @@ async def test_status_idle(mock_request: Any) -> None:
         "door": True,
         "paymentEndDate": None,
         "temperature": "21",
+        "saunaName": "test",
     }
     expected_result = HuumStatusResponse.from_dict(idle_status_response)
     mock_request.return_value = MockResponse(idle_status_response, 200)
@@ -43,6 +44,7 @@ async def test_status_heating(mock_request: Any) -> None:
         "startDate": 1631623054,
         "endDate": 1631633854,
         "duration": 179,
+        "saunaName": "test",
     }
     expected_result = HuumStatusResponse.from_dict(heating_status_response)
     mock_request.return_value = MockResponse(heating_status_response, 200)
@@ -67,6 +69,7 @@ async def test_heating_stop(mock_request: Any) -> None:
         "startDate": 1631685790,
         "endDate": 1631685790,
         "duration": 0,
+        "saunaName": "test",
     }
     expected_result = HuumStatusResponse.from_dict(heating_stop_response)
     mock_request.return_value = MockResponse(heating_stop_response, 200)
@@ -91,6 +94,7 @@ async def test_heating_start(mock_request: Any) -> None:
         "startDate": 1631685780,
         "endDate": 1631696580,
         "duration": 180,
+        "saunaName": "test",
     }
     expected_result = HuumStatusResponse.from_dict(heating_start_response)
     mock_request.return_value = MockResponse(heating_start_response, 200)
