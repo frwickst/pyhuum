@@ -4,7 +4,6 @@ from urllib.parse import urljoin
 import aiohttp
 from aiohttp import ClientResponse
 
-from huum.const import SaunaStatus
 from huum.exceptions import (
     BadRequest,
     Forbidden,
@@ -14,7 +13,7 @@ from huum.exceptions import (
 )
 from huum.schemas import HuumStatusResponse
 
-API_BASE = "https://api.huum.eu/action/"
+API_BASE = "https://sauna.huum.eu/action/"
 API_HOME_BASE = f"{API_BASE}/home/"
 
 
@@ -28,7 +27,7 @@ class Huum:
         huum = Huum(username="foo", password="bar")
 
         # If you don't have an existing aiohttp session
-        # then run `open_session()` after initilizing
+        # then run `open_session()` after initializing
         huum.open_session()
 
         # Turn on the sauna
@@ -133,7 +132,7 @@ class Huum:
         """
         Alias for turn_on as Huum does not expose an explicit "set_temperature" endpoint
 
-        Implementation choice: Yes, aliasing can be done by simply asigning
+        Implementation choice: Yes, aliasing can be done by simply assigning
         set_temperature = turn_on, however this will not create documentation,
         makes the code harder to read and is generally seen as non-pythonic.
 
@@ -160,28 +159,19 @@ class Huum:
 
         return HuumStatusResponse.from_dict(json_data)
 
-    async def status_from_status_or_stop(self) -> HuumStatusResponse:
+    async def toggle_light(self) -> HuumStatusResponse:
         """
-        Get status from the status endpoint or from stop event if that is in option
-
-        The Huum API does not return the target temperature if the sauna
-        is not heating. Turning off the sauna will give the temperature,
-        however. So if the sauna is not on, we can get the temperature
-        set on the thermostat by telling it to turn off. If the sauna is on
-        we get the target temperature from the status endpoint.
-
-        Why this is not done in the status method is because there is an
-        additional API call in the case that the status endpoint does not
-        return target temperature. For this reason the status method is kept
-        as a pure status request.
+        Toggles the light/fan on a Sauna
 
         Returns:
             A `HuumStatusResponse` from the Huum API
         """
-        status_response = await self.status()
-        if status_response.status == SaunaStatus.ONLINE_NOT_HEATING:
-            status_response = await self.turn_off()
-        return status_response
+        url = urljoin(API_HOME_BASE, "light")
+
+        response = await self._make_call("get", url)
+        json_data = await response.json()
+
+        return HuumStatusResponse.from_dict(json_data)
 
     async def open_session(self) -> None:
         self.session = aiohttp.ClientSession()
