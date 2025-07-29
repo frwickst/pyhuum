@@ -1,5 +1,5 @@
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import ANY, patch
 
 import aiohttp
 import pytest
@@ -62,6 +62,17 @@ async def test_bad_temperature_value(mock_request: Any) -> None:
 
 @pytest.mark.asyncio
 @patch("aiohttp.ClientSession._request")
+async def test_bad_humidity_value(mock_request: Any) -> None:
+    mock_request.return_value = MockResponse({}, 400)
+
+    huum = Huum("test", "test")
+    await huum.open_session()
+    with pytest.raises(ValueError):
+        await huum.turn_on(temperature=40, humidity=11)
+
+
+@pytest.mark.asyncio
+@patch("aiohttp.ClientSession._request")
 async def test_set_temperature_turn_on(mock_request: Any) -> None:
     response = {
         "statusCode": SaunaStatus.ONLINE_NOT_HEATING,
@@ -78,3 +89,30 @@ async def test_set_temperature_turn_on(mock_request: Any) -> None:
     result_set_temperature = await huum.set_temperature(temperature=80)
 
     assert result_turn_on == result_set_temperature
+
+
+@pytest.mark.asyncio
+@patch("aiohttp.ClientSession._request")
+async def test_humidity_turn_on(mock_request: Any) -> None:
+    response = {
+        "statusCode": SaunaStatus.ONLINE_NOT_HEATING,
+        "door": True,
+        "temperature": 80,
+        "maxHeatingTime": 180,
+        "saunaName": "test",
+        "humidity": 5,
+    }
+    mock_request.return_value = MockResponse(response, 200)
+
+    huum = Huum("test", "test")
+    await huum.open_session()
+    result_turn_on = await huum.turn_on(temperature=80, humidity=5)
+
+    mock_request.assert_called_with(
+        "POST",
+        "https://sauna.huum.eu/action/home/start",
+        data=None,
+        auth=ANY,
+        json={"targetTemperature": 80, "humidity": 5},
+    )
+    assert result_turn_on.humidity == 5

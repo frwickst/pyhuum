@@ -84,13 +84,16 @@ class Huum:
 
         return response
 
-    async def turn_on(self, temperature: int, safety_override: bool = False) -> HuumStatusResponse:
+    async def turn_on(
+        self, temperature: int, safety_override: bool = False, humidity: Optional[int] = None
+    ) -> HuumStatusResponse:
         """
-        Turns on the sauna at a given temperature
+        Turns on the sauna at a given temperature and optionally humidity
 
         Args:
             temperature: Target temperature to set the sauna to
             safety_override: If False, check if door is close before turning on the sauna
+            humidity: Target humidity duty cycle (optional)
 
         Returns:
             A `HuumStatusResponse` from the Huum API
@@ -99,12 +102,17 @@ class Huum:
             raise ValueError(
                 f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
             )
+        data = {"targetTemperature": temperature}
+
+        if humidity is not None:
+            if humidity not in range(0, 11):
+                raise ValueError(f"Humidity '{humidity}' must be between 0-10")
+            data["humidity"] = humidity
 
         if not safety_override:
             await self._check_door()
 
         url = urljoin(API_HOME_BASE, "start")
-        data = {"targetTemperature": temperature}
 
         response = await self._make_call("post", url, json=data)
         json_data = await response.json()
