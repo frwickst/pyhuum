@@ -20,7 +20,7 @@ STATUS_CODE_TEXTS: Dict[int, str] = {
 
 CONFIG_CODE_TEXTS: Dict[int, str] = {
     1: "Configured to use steamer system",
-    2: "Configured to user light system",
+    2: "Configured to use light system",
     3: "Configured to use both light and steamer systems",
 }
 
