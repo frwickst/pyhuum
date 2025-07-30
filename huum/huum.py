@@ -98,7 +98,7 @@ class Huum:
         Returns:
             A `HuumStatusResponse` from the Huum API
         """
-        if temperature not in range(self.min_temp, self.max_temp):
+        if temperature not in range(self.min_temp, self.max_temp + 1):
             raise ValueError(
                 f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
             )
