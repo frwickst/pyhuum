@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "huum"
-version = "0.8.0"
+version = "0.8.1"
 description = "Python library for Huum saunas"
 authors = ["Frank Wickström <frwickst@gmail.com>"]
 repository = "https://github.com/frwickst/pyhuum"
