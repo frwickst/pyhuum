@@ -116,3 +116,10 @@ async def test_humidity_turn_on(mock_request: Any) -> None:
         json={"targetTemperature": 80, "humidity": 20},
     )
     assert result_turn_on.humidity == 20
+
+
+def test_max_humidity() -> None:
+    huum = Huum("test", "test")
+    assert huum.get_max_humidity(90) == 10
+    assert huum.get_max_humidity(40) == 90
+    assert huum.get_max_humidity(100) == 0
