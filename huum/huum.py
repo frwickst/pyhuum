@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import aiohttp
 from aiohttp import ClientResponse
 
-from huum.const import HUMIDITY_TRESHOLDS, MAX_TEMP, MIN_TEMP
+from huum.const import HUMIDITY_THRESHOLDS, MAX_TEMP, MIN_TEMP
 from huum.exceptions import (
     BadRequest,
     Forbidden,
@@ -187,7 +187,7 @@ class Huum:
         await self.session.close()
 
     def get_max_humidity(self, temperature: int) -> int:
-        for treshold_temp, max_humidity in HUMIDITY_TRESHOLDS:
-            if temperature <= treshold_temp:
+        for threshold_temp, max_humidity in HUMIDITY_THRESHOLDS:
+            if temperature <= threshold_temp:
                 return max_humidity
         return 0
