@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 import aiohttp
 from aiohttp import ClientResponse
 
+from huum.const import HUMIDITY_THRESHOLDS, MAX_TEMP, MIN_TEMP
 from huum.exceptions import (
     BadRequest,
     Forbidden,
@@ -33,9 +34,6 @@ class Huum:
         # Turn on the sauna
         huum.turn_on(80)
     """
-
-    min_temp = 40
-    max_temp = 110
 
     session: aiohttp.ClientSession
 
@@ -98,15 +96,16 @@ class Huum:
         Returns:
             A `HuumStatusResponse` from the Huum API
         """
-        if temperature not in range(self.min_temp, self.max_temp + 1):
-            raise ValueError(
-                f"Temperature '{temperature}' must be between {self.min_temp}-{self.max_temp}"
-            )
+        if temperature not in range(MIN_TEMP, MAX_TEMP + 1):
+            raise ValueError(f"Temperature '{temperature}' must be between {MIN_TEMP}-{MAX_TEMP}")
         data = {"targetTemperature": temperature}
 
         if humidity is not None:
-            if humidity not in range(0, 11):
-                raise ValueError(f"Humidity '{humidity}' must be between 0-10")
+            max_humidity = self.get_max_humidity(temperature)
+            if humidity > max_humidity:
+                raise ValueError(
+                    f"Humidity '{humidity}' cannot be higher than {max_humidity} at temperature {temperature}"
+                )
             data["humidity"] = humidity
 
         if not safety_override:
@@ -186,3 +185,9 @@ class Huum:
 
     async def close_session(self) -> None:
         await self.session.close()
+
+    def get_max_humidity(self, temperature: int) -> int:
+        for threshold_temp, max_humidity in HUMIDITY_THRESHOLDS:
+            if temperature <= threshold_temp:
+                return max_humidity
+        return 0

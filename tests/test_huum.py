@@ -68,7 +68,7 @@ async def test_bad_humidity_value(mock_request: Any) -> None:
     huum = Huum("test", "test")
     await huum.open_session()
     with pytest.raises(ValueError):
-        await huum.turn_on(temperature=40, humidity=11)
+        await huum.turn_on(temperature=90, humidity=11)
 
 
 @pytest.mark.asyncio
@@ -100,19 +100,26 @@ async def test_humidity_turn_on(mock_request: Any) -> None:
         "temperature": 80,
         "maxHeatingTime": 180,
         "saunaName": "test",
-        "humidity": 5,
+        "humidity": 20,
     }
     mock_request.return_value = MockResponse(response, 200)
 
     huum = Huum("test", "test")
     await huum.open_session()
-    result_turn_on = await huum.turn_on(temperature=80, humidity=5)
+    result_turn_on = await huum.turn_on(temperature=80, humidity=20)
 
     mock_request.assert_called_with(
         "POST",
         "https://sauna.huum.eu/action/home/start",
         data=None,
         auth=ANY,
-        json={"targetTemperature": 80, "humidity": 5},
+        json={"targetTemperature": 80, "humidity": 20},
     )
-    assert result_turn_on.humidity == 5
+    assert result_turn_on.humidity == 20
+
+
+def test_max_humidity() -> None:
+    huum = Huum("test", "test")
+    assert huum.get_max_humidity(90) == 10
+    assert huum.get_max_humidity(40) == 90
+    assert huum.get_max_humidity(100) == 0

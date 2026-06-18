@@ -25,3 +25,19 @@ CONFIG_CODE_TEXTS: Dict[int, str] = {
 }
 
 STEAMER_CODE_TEXTS: Dict[int, str] = {1: "No water in steamer, steamer system not allowed to start"}
+
+# Taken from UKU 4.2 manual
+HUMIDITY_THRESHOLDS = [
+    (45, 90),
+    (50, 55),
+    (55, 45),
+    (60, 40),
+    (65, 35),
+    (70, 30),
+    (75, 25),
+    (80, 20),
+    (85, 15),
+    (90, 10),
+]
+MIN_TEMP = 40
+MAX_TEMP = 110
