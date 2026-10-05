@@ -62,6 +62,8 @@ class HuumStatusResponse(DataClassDictMixin):
     light: int | None = None
     target_humidity: int | None = None
     humidity: int | None = None
+    maximum_target_humidity: int | None = None
+    measured_humidity: int | None = None
     remote_safety_state: str | None = None
     sauna_config: SaunaConfig | None = None
 
@@ -77,6 +79,8 @@ class HuumStatusResponse(DataClassDictMixin):
             "is_private": "isPrivate",
             "show_modal": "showModal",
             "target_humidity": "targetHumidity",
+            "maximum_target_humidity": "maximumTargetHumidity",
+            "measured_humidity": "measuredHumidity",
             "remote_safety_state": "remoteSafetyState",
             "sauna_config": "saunaConfig",
             "sauna_name": "saunaName",

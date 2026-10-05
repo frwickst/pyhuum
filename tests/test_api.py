@@ -58,6 +58,32 @@ async def test_status_heating(mock_request: Any) -> None:
 
 @pytest.mark.asyncio
 @patch("aiohttp.ClientSession._request")
+async def test_status_humidity(mock_request: Any) -> None:
+    humidity_status_response = {
+        "statusCode": 231,
+        "door": True,
+        "temperature": 78,
+        "targetTemperature": 90,
+        "targetHumidity": 5,
+        "humidity": 5,
+        "maximumTargetHumidity": 10,
+        "measuredHumidity": 8,
+        "saunaName": "test",
+    }
+    mock_request.return_value = MockResponse(humidity_status_response, 200)
+
+    huum = Huum("test", "test")
+    await huum.open_session()
+    response = await huum.status()
+
+    assert response.target_humidity == 5
+    assert response.humidity == 5
+    assert response.maximum_target_humidity == 10
+    assert response.measured_humidity == 8
+
+
+@pytest.mark.asyncio
+@patch("aiohttp.ClientSession._request")
 async def test_heating_stop(mock_request: Any) -> None:
     heating_stop_response = {
         "maxHeatingTime": "3",
